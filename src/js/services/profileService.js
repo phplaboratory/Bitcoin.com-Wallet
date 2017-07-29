@@ -320,9 +320,16 @@ angular.module('copayApp.services')
       var walletClient = bwcService.getClient(null, opts);
       var network = opts.networkName || 'livenet';
 
+
+      console.log("14. Network Name "+opts.networkName);
+
       if (opts.mnemonic) {
+        console.log("15. Network Name "+opts.networkName);
         try {
           opts.mnemonic = root._normalizeMnemonic(opts.mnemonic);
+
+          console.log("16. Network Name "+opts.networkName);
+
           walletClient.seedFromMnemonic(opts.mnemonic, {
             network: network,
             passphrase: opts.passphrase,
@@ -330,11 +337,14 @@ angular.module('copayApp.services')
             derivationStrategy: opts.derivationStrategy || 'BIP44',
           });
 
+          console.log("17. Network Name "+opts.networkName);
+
         } catch (ex) {
           $log.info(ex);
           return cb(gettextCatalog.getString('Could not create: Invalid wallet recovery phrase'));
         }
       } else if (opts.extendedPrivateKey) {
+        console.log("18. Network Name "+opts.networkName);
         try {
           walletClient.seedFromExtendedPrivateKey(opts.extendedPrivateKey);
         } catch (ex) {
@@ -342,6 +352,7 @@ angular.module('copayApp.services')
           return cb(gettextCatalog.getString('Could not create using the specified extended private key'));
         }
       } else if (opts.extendedPublicKey) {
+        console.log("19. Network Name "+opts.networkName);
         try {
           walletClient.seedFromExtendedPublicKey(opts.extendedPublicKey, opts.externalSource, opts.entropySource, {
             account: opts.account || 0,
@@ -355,6 +366,7 @@ angular.module('copayApp.services')
       } else {
         var lang = uxLanguage.getCurrentLanguage();
         try {
+          console.log("20. Network Name "+opts.networkName);
           walletClient.seedFromRandomWithMnemonic({
             network: network,
             passphrase: opts.passphrase,
@@ -362,6 +374,8 @@ angular.module('copayApp.services')
             account: 0,
           });
         } catch (e) {
+          console.log("21. Network Name "+opts.networkName);
+          console.log('Error creating recovery phrase: ' + e.message);
           $log.info('Error creating recovery phrase: ' + e.message);
           if (e.message.indexOf('language') > 0) {
             $log.info('Using default language for recovery phrase');
@@ -380,14 +394,16 @@ angular.module('copayApp.services')
 
     // Creates a wallet on BWC/BWS
     var doCreateWallet = function(opts, cb) {
+      console.log("9. Network Name "+opts.networkName);
       $log.debug('Creating Wallet:', opts);
       $timeout(function() {
         seedWallet(opts, function(err, walletClient) {
           if (err) return cb(err);
+          console.log("11. Network Name "+opts.networkName);
 
           var name = opts.name || gettextCatalog.getString('Personal Wallet');
           var myName = opts.myName || gettextCatalog.getString('me');
-
+          console.log("12. Network Name "+opts.networkName);
           walletClient.createWallet(name, myName, opts.m, opts.n, {
             network: opts.networkName,
             singleAddress: opts.singleAddress,
@@ -402,6 +418,7 @@ angular.module('copayApp.services')
 
     // create and store a wallet
     root.createWallet = function(opts, cb) {
+      console.log("7. Network Name "+opts.networkName);
       doCreateWallet(opts, function(err, walletClient, secret) {
         if (err) return cb(err);
 
@@ -499,6 +516,7 @@ angular.module('copayApp.services')
 
 
       var skipKeyValidation = shouldSkipValidation(walletId);
+      console.log("10. Network Name "+opts.networkName);
       if (!skipKeyValidation)
         root.runValidation(client);
 

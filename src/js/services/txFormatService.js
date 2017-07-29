@@ -176,8 +176,8 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
     }
 
     return {
-      amount: amount, 
-      currency: currency, 
+      amount: amount,
+      currency: currency,
       alternativeIsoCode: alternativeIsoCode,
       amountSat: amountSat,
       amountUnitStr: amountUnitStr

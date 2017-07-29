@@ -144,7 +144,7 @@ angular.module('copayApp.controllers').controller('createController',
       if($scope.formData.BCCEnabled) {
         opts.networkName="bcc"+opts.networkName;
       }
-      console.log("Network Name "+opts.networkName);
+      console.log("1. Network Name "+opts.networkName);
 
 
       var setSeed = $scope.formData.seedSource.id == 'set';
@@ -166,17 +166,18 @@ angular.module('copayApp.controllers').controller('createController',
 
         opts.account = pathData.account;
         opts.networkName = pathData.networkName;
+        console.log("2. Network Name "+opts.networkName);
         opts.derivationStrategy = pathData.derivationStrategy;
 
       } else {
         opts.passphrase = $scope.formData.createPassphrase;
       }
-
+      console.log("3. Network Name "+opts.networkName);
       if (setSeed && !opts.mnemonic && !opts.extendedPrivateKey) {
         popupService.showAlert(gettextCatalog.getString('Error'), gettextCatalog.getString('Please enter the wallet recovery phrase'));
         return;
       }
-
+      console.log("4. Network Name "+opts.networkName);
       if ($scope.formData.seedSource.id == walletService.externalSource.ledger.id || $scope.formData.seedSource.id == walletService.externalSource.trezor.id || $scope.formData.seedSource.id == walletService.externalSource.intelTEE.id) {
         var account = $scope.formData.account;
         if (!account || account < 1) {
@@ -205,7 +206,7 @@ angular.module('copayApp.controllers').controller('createController',
             popupService.showAlert(gettextCatalog.getString('Error'), 'Invalid seed source id');
             return;
         }
-
+        console.log("5. Network Name "+opts.networkName);
         src.getInfoForNewWallet(opts.n > 1, account, opts.networkName, function(err, lopts) {
           ongoingProcess.set('connecting ' + $scope.formData.seedSource.id, false);
           if (err) {
@@ -216,6 +217,7 @@ angular.module('copayApp.controllers').controller('createController',
           _create(opts);
         });
       } else {
+        console.log("6. Network Name "+opts.networkName);
         _create(opts);
       }
     };

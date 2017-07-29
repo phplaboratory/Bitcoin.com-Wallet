@@ -208,7 +208,22 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       // Selected unit
       cache.unitToSatoshi = config.settings.unitToSatoshi;
       cache.satToUnit = 1 / cache.unitToSatoshi;
-      cache.unitName = config.settings.unitName;
+
+
+      var unitmap={
+        'testnet':{'BTC':'tBTC','bits':'tbits'},
+        'livenet':{'BTC':'BTC','bits':'bits'},
+        'bcctestnet':{'BTC':'tBCC','bits':'tcash'},
+        'bcclivenet':{'BTC':'BCC','bits':'cash'},
+
+      };
+
+      try {
+        cache.unitName = unitmap[wallet.credentials.network][config.settings.unitName];
+      } catch (e) {
+        cache.unitName = config.settings.unitName;
+      }
+
 
       //STR
       cache.totalBalanceStr = txFormatService.formatAmount(cache.totalBalanceSat) + ' ' + cache.unitName;
@@ -406,10 +421,28 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
 
       var cacheUnit = txs[0].amountStr.split(' ')[1];
 
-      if (cacheUnit == config.unitName)
-        return;
+       if (cacheUnit == config.unitName)
+         return;
 
-      var name = ' ' + config.unitName;
+      var name = ' ' + config.unitName ;
+
+      var unitmap={
+        'testnet':{'BTC':'tBTC','bits':'tbits'},
+        'livenet':{'BTC':'BTC','bits':'bits'},
+        'bcctestnet':{'BTC':'tBCC','bits':'tcash'},
+        'bcclivenet':{'BTC':'BCC','bits':'cash'},
+
+      };
+
+
+
+      try {
+        name = ' ' + unitmap[wallet.credentials.network][config.unitName];
+      } catch (e) {
+
+      }
+
+
 
       $log.debug('Fixing Tx Cache Unit to:' + name)
       lodash.each(txs, function(tx) {
@@ -602,7 +635,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
     });
   };
 
- 
+
 
   root.getTxHistory = function(wallet, opts, cb) {
     opts = opts || {};
