@@ -77,11 +77,13 @@ angular.module('copayApp.controllers').controller('createController',
       var seedOptions = [{
         id: 'new',
         label: gettextCatalog.getString('Random'),
-        supportsTestnet: true
+        supportsTestnet: true,
+        supportsBCC: true
       }, {
         id: 'set',
         label: gettextCatalog.getString('Specify Recovery Phrase...'),
-        supportsTestnet: false
+        supportsTestnet: false,
+        supportsBCC: false
       }];
 
       $scope.formData.seedSource = seedOptions[0];
@@ -138,6 +140,12 @@ angular.module('copayApp.controllers').controller('createController',
         singleAddress: $scope.formData.singleAddressEnabled,
         walletPrivKey: $scope.formData._walletPrivKey, // Only for testing
       };
+
+      if($scope.formData.BCCEnabled) {
+        opts.networkName="BCC-"+opts.networkName;
+      }
+      console.log("Network Name "+opts.networkName);
+
 
       var setSeed = $scope.formData.seedSource.id == 'set';
       if (setSeed) {
