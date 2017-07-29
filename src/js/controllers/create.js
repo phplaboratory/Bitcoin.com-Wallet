@@ -142,7 +142,7 @@ angular.module('copayApp.controllers').controller('createController',
       };
 
       if($scope.formData.BCCEnabled) {
-        opts.networkName="BCC-"+opts.networkName;
+        opts.networkName="bcc"+opts.networkName;
       }
       console.log("Network Name "+opts.networkName);
 
