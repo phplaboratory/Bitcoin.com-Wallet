@@ -31,6 +31,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
     $scope.showAlternativeAmount = !!$scope.nextStep;
     $scope.toColor = data.stateParams.toColor;
     $scope.showSendMax = false;
+    $scope.showCash = false;
 
     if (!$scope.nextStep && !data.stateParams.toAddress) {
       $log.error('Bad params at amount')
@@ -123,6 +124,27 @@ angular.module('copayApp.controllers').controller('amountController', function($
       $scope.globalResult = '= ' + processResult(amount);
     }
   };
+
+  $scope.toggleBCC = function() {
+
+    $scope.showCash = !$scope.showCash;
+
+    if($scope.showCash) {
+      $scope.unitName = "BCC";
+    } else {
+      var config = configService.getSync().wallet.settings;
+      $scope.unitName = config.unitName;
+    }
+
+
+
+
+    // if ($scope.amount && isExpression($scope.amount)) {
+    //   var amount = evaluate(format($scope.amount));
+    //   $scope.globalResult = '= ' + processResult(amount);
+    // }
+  };
+
 
   function checkFontSize() {
     if ($scope.amount && $scope.amount.length >= SMALL_FONT_SIZE_LIMIT) $scope.smallFont = true;
@@ -228,10 +250,12 @@ angular.module('copayApp.controllers').controller('amountController', function($
         id: _id,
         amount: $scope.useSendMax ? null : _amount,
         currency: $scope.showAlternativeAmount ? $scope.alternativeIsoCode : $scope.unitName,
-        useSendMax: $scope.useSendMax
+        useSendMax: $scope.useSendMax,
+        BCC: $scope.showCash
       });
     } else {
       var amount = $scope.showAlternativeAmount ? fromFiat(_amount) : _amount;
+      console.log("Sending to next step:"+$scope.showCash);
       $state.transitionTo('tabs.send.confirm', {
         recipientType: $scope.recipientType,
         toAmount: $scope.useSendMax ? null : (amount * unitToSatoshi).toFixed(0),
@@ -239,7 +263,9 @@ angular.module('copayApp.controllers').controller('amountController', function($
         toName: $scope.toName,
         toEmail: $scope.toEmail,
         toColor: $scope.toColor,
-        useSendMax: $scope.useSendMax
+        useSendMax: $scope.useSendMax,
+        showCash: $scope.showCash,
+
       });
     }
     $scope.useSendMax = null;

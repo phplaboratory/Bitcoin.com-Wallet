@@ -20,6 +20,10 @@ angular.module('copayApp.controllers').controller('confirmController', function(
 
   $scope.$on("$ionicView.beforeEnter", function(event, data) {
 
+    console.log("Send to address:"+data.stateParams.toAddress);
+    console.log("Is Cash:"+data.stateParams.showCash);
+
+
     toAmount = data.stateParams.toAmount;
     cachedSendMax = {};
     $scope.showAddress = false;
@@ -31,6 +35,8 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     $scope.toColor = data.stateParams.toColor;
     $scope.description = data.stateParams.description;
     $scope.paypro = data.stateParams.paypro;
+    $scope.showCash = data.stateParams.showCash;
+
     $scope.insufficientFunds = false;
     $scope.noMatchingWallet = false;
     $scope.paymentExpired = {
@@ -39,7 +45,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     $scope.remainingTimeStr = {
       value: null
     };
-    $scope.network = (new bitcore.Address($scope.toAddress)).network.name;
+    $scope.network = (data.stateParams.showCash ? 'bcc':'')+(new bitcore.Address($scope.toAddress)).network.name;
     setFee();
     resetValues();
     setwallets();
@@ -76,7 +82,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
   function setwallets() {
     $scope.wallets = profileService.getWallets({
       onlyComplete: true,
-      network: $scope.network
+       network: $scope.network
     });
 
     if (!$scope.wallets || !$scope.wallets.length) {
