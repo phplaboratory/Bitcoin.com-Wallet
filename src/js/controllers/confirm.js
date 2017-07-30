@@ -22,6 +22,11 @@ angular.module('copayApp.controllers').controller('confirmController', function(
 
     console.log("Send to address:"+data.stateParams.toAddress);
     console.log("Is Cash:"+data.stateParams.showCash);
+    var prefix='';
+    if(data.stateParams.showCash ==='yes') {
+      console.log("Adding prefix");
+      prefix='bcc'
+    }
 
 
     toAmount = data.stateParams.toAmount;
@@ -45,7 +50,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     $scope.remainingTimeStr = {
       value: null
     };
-    $scope.network = (data.stateParams.showCash ? 'bcc':'')+(new bitcore.Address($scope.toAddress)).network.name;
+    $scope.network = prefix+(new bitcore.Address($scope.toAddress)).network.name;
     setFee();
     resetValues();
     setwallets();
@@ -424,6 +429,8 @@ angular.module('copayApp.controllers').controller('confirmController', function(
 
     var txp = {};
     var amount;
+
+    txp.network=wallet.network;
 
     if ($scope.useSendMax) amount = parseFloat((toAmount * unitToSatoshi).toFixed(0));
     else amount = toAmount;

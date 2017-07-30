@@ -251,7 +251,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
         amount: $scope.useSendMax ? null : _amount,
         currency: $scope.showAlternativeAmount ? $scope.alternativeIsoCode : $scope.unitName,
         useSendMax: $scope.useSendMax,
-        BCC: $scope.showCash
+        showCash: ($scope.showCash ? 'yes' : 'no')
       });
     } else {
       var amount = $scope.showAlternativeAmount ? fromFiat(_amount) : _amount;
@@ -264,7 +264,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
         toEmail: $scope.toEmail,
         toColor: $scope.toColor,
         useSendMax: $scope.useSendMax,
-        showCash: $scope.showCash,
+        showCash: ($scope.showCash ? 'yes' : 'no'),
 
       });
     }
