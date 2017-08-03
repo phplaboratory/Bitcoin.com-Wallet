@@ -82,8 +82,8 @@ angular.module('copayApp.controllers').controller('createController',
       }, {
         id: 'set',
         label: gettextCatalog.getString('Specify Recovery Phrase...'),
-        supportsTestnet: false,
-        supportsBCC: false
+        supportsTestnet: true,
+        supportsBCC: true
       }];
 
       $scope.formData.seedSource = seedOptions[0];
@@ -166,6 +166,11 @@ angular.module('copayApp.controllers').controller('createController',
 
         opts.account = pathData.account;
         opts.networkName = pathData.networkName;
+
+        if($scope.formData.BCCEnabled) {
+          opts.networkName="bcc"+pathData.networkName;
+        }
+
         console.log("2. Network Name "+opts.networkName);
         opts.derivationStrategy = pathData.derivationStrategy;
 
@@ -255,5 +260,10 @@ angular.module('copayApp.controllers').controller('createController',
           } else $state.go('tabs.home');
         });
       }, 300);
-    }
+    };
+
+    $scope.setDerivationPath = function() {
+      $scope.formData.derivationPath = $scope.formData.testnetEnabled ? derivationPathHelper.defaultTestnet : derivationPathHelper.default;
+    };
+
   });

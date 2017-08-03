@@ -54,6 +54,11 @@
         <input type="text" ng-model="formData.bwsurl">
       </label>
 
+      <ion-toggle   ng-model="formData.BCCEnabled" toggle-class="toggle-positive">
+        <span translate>Bitcoin Cash</span>
+      </ion-toggle>
+
+
       <ion-toggle ng-model="formData.testnetEnabled" ng-change="setDerivationPath()" toggle-class="toggle-positive">
         <span translate>Testnet</span>
       </ion-toggle>

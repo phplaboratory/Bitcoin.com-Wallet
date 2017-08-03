@@ -49,7 +49,7 @@ angular.module('copayApp.services')
     function _requiresBackup(wallet) {
       if (wallet.isPrivKeyExternal()) return false;
       if (!wallet.credentials.mnemonic) return false;
-      if (wallet.credentials.network == 'testnet') return false;
+      if (wallet.credentials.network == 'testnet' || wallet.credentials.network == 'bcctestnet' ) return false;
 
       return true;
     };
@@ -389,6 +389,11 @@ angular.module('copayApp.services')
           }
         }
       }
+
+      console.log( "profileService.js seedWallet  walletClient.credentials");
+      console.log( walletClient.credentials);
+
+      walletClient.credentials.network = network;
       return cb(null, walletClient);
     };
 
@@ -423,7 +428,8 @@ angular.module('copayApp.services')
         if (err) return cb(err);
 
         addAndBindWalletClient(walletClient, {
-          bwsurl: opts.bwsurl
+          bwsurl: opts.bwsurl,
+          networkName: opts.networkName,
         }, cb);
       });
     };

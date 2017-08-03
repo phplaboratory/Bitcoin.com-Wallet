@@ -17,6 +17,8 @@ angular.module('copayApp.controllers').controller('importController',
       $scope.formData.account = 1;
       $scope.importErr = false;
       $scope.isCopay = appConfigService.name == 'copay';
+      $scope.formData.BCCEnabled = false;
+
 
       if ($stateParams.code)
         $scope.processWalletInfo($stateParams.code);
@@ -67,7 +69,12 @@ angular.module('copayApp.controllers').controller('importController',
         popupService.showAlert(gettextCatalog.getString('Error'), gettextCatalog.getString('Password required. Make sure to enter your password in advanced options'));
 
       $scope.formData.derivationPath = info.derivationPath;
-      $scope.formData.testnetEnabled = info.network == 'testnet' ? true : false;
+      $scope.formData.testnetEnabled = (info.network == 'testnet' || info.network == 'bcctestnet') ? true : false;
+      $scope.formData.BCCEnabled = (info.network == 'bcclivenet' || info.network == 'bcctestnet') ? true : false;
+
+      console.log("controllers/import.js processWalletInfo, BCCEnabled: "+$scope.formData.BCCEnabled);
+
+
 
       $timeout(function() {
         $scope.formData.words = info.data;
