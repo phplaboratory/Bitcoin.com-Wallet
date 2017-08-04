@@ -11,7 +11,7 @@ angular.module('copayApp.controllers').controller('txDetailsController', functio
     $scope.wallet = profileService.getWallet(data.stateParams.walletId);
     $scope.color = $scope.wallet.color;
     $scope.copayerId = $scope.wallet.credentials.copayerId;
-    $scope.isShared = $scope.wallet.credentials.n > 1; 
+    $scope.isShared = $scope.wallet.credentials.n > 1;
 
     txConfirmNotification.checkIfEnabled(txId, function(res) {
       $scope.txNotification = { value: res };
@@ -106,7 +106,7 @@ angular.module('copayApp.controllers').controller('txDetailsController', functio
         return popupService.showAlert(gettextCatalog.getString('Error'), gettextCatalog.getString('Transaction not available at this time'));
       }
 
-      $scope.btx = txFormatService.processTx(tx);
+      $scope.btx = txFormatService.processTx(tx,$scope.wallet.network);
       txFormatService.formatAlternativeStr(tx.fees, function(v) {
         $scope.feeFiatStr = v;
       });
@@ -130,7 +130,7 @@ angular.module('copayApp.controllers').controller('txDetailsController', functio
   };
 
   var updateTxDebounced = lodash.debounce(updateTx, 5000);
-  
+
   $scope.showCommentPopup = function() {
     var opts = {};
     if ($scope.btx.message) {

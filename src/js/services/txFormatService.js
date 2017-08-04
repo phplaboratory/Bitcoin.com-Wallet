@@ -17,10 +17,33 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
     return this.Utils.formatAmount(satoshis, config.unitCode, opts);
   };
 
-  root.formatAmountStr = function(satoshis) {
+  root.formatAmountStr = function(satoshis, network) {
     if (isNaN(satoshis)) return;
     var config = configService.getSync().wallet.settings;
+    console.log("root.formatAmountStr network="+network);
+    if (network) {
+      console.log("root.formatAmountStr network exists="+network);
+
+
+      var unitmap={
+        'testnet':{'BTC':'tBTC','bits':'tbits'},
+        'livenet':{'BTC':'BTC','bits':'bits'},
+        'bcctestnet':{'BTC':'tBCC','bits':'tcash'},
+        'bcclivenet':{'BTC':'BCC','bits':'cash'},
+
+      };
+
+      try {
+        return root.formatAmount(satoshis) + ' ' + unitmap[network][config.unitName];
+      } catch (e) {
+        return root.formatAmount(satoshis) + ' ' + config.unitName;
+      }
+
+    }
+    else
     return root.formatAmount(satoshis) + ' ' + config.unitName;
+
+
   };
 
   root.formatToUSD = function(satoshis, cb) {
@@ -66,10 +89,11 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
     };
   };
 
-  root.processTx = function(tx) {
+  root.processTx = function(tx,network) {
+    console.log("root.processTx network="+network);
+
     if (!tx || tx.action == 'invalid')
       return tx;
-
     // New transaction output format
     if (tx.outputs && tx.outputs.length) {
 
@@ -81,7 +105,7 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
           tx.hasMultiplesOutputs = true;
         }
         tx.amount = lodash.reduce(tx.outputs, function(total, o) {
-          o.amountStr = root.formatAmountStr(o.amount);
+          o.amountStr = root.formatAmountStr(o.amount,network);
           o.alternativeAmountStr = root.formatAlternativeStr(o.amount);
           return total + o.amount;
         }, 0);
@@ -89,9 +113,9 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
       tx.toAddress = tx.outputs[0].toAddress;
     }
 
-    tx.amountStr = root.formatAmountStr(tx.amount);
+    tx.amountStr = root.formatAmountStr(tx.amount,network);
     tx.alternativeAmountStr = root.formatAlternativeStr(tx.amount);
-    tx.feeStr = root.formatAmountStr(tx.fee || tx.fees);
+    tx.feeStr = root.formatAmountStr(tx.fee || tx.fees,network);
 
     return tx;
   };
