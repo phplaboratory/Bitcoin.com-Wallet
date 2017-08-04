@@ -266,4 +266,21 @@ angular.module('copayApp.controllers').controller('createController',
       $scope.formData.derivationPath = $scope.formData.testnetEnabled ? derivationPathHelper.defaultTestnet : derivationPathHelper.default;
     };
 
+    $scope.setBwsUrl = function() {
+      if(!$scope.formData.seedSource.supportsBCC) return;
+      var defaults = configService.getDefaults();
+      if(!('bwsbcc' in defaults)) return;
+
+      if ($scope.formData.BCCEnabled) {
+        $scope.formData.bwsurl = defaults.bwsbcc.url;
+
+      } else {
+        $scope.formData.bwsurl = defaults.bws.url;
+      }
+
+
+    };
+
+
+
   });

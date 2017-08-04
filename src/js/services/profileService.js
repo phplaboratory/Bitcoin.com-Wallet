@@ -596,6 +596,20 @@ angular.module('copayApp.services')
 
       var addressBook = str.addressBook || {};
 
+
+
+      var defaults = configService.getDefaults();
+
+
+      if ("bwsbcc" in defaults) {
+        if( !opts.overwriteBwsurl && (str.network === 'bcctestnet' || str.network === 'bcclivenet' )) {
+          opts.bwsurl = defaults.bwsbcc.url;
+        } else {
+          opts.bwsurl = defaults.bws.url;
+        }
+      }
+
+
       addAndBindWalletClient(walletClient, {
         bwsurl: opts.bwsurl
       }, function(err, walletId) {

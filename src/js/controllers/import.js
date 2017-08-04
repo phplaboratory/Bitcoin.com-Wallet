@@ -100,6 +100,7 @@ angular.module('copayApp.controllers').controller('importController',
       opts.compressed = null;
       opts.password = null;
 
+
       $timeout(function() {
         profileService.importWallet(str2, opts, function(err, client) {
           ongoingProcess.set('importingWallet', false);
@@ -187,12 +188,32 @@ angular.module('copayApp.controllers').controller('importController',
       $scope.formData.derivationPath = $scope.formData.testnetEnabled ? derivationPathHelper.defaultTestnet : derivationPathHelper.default;
     };
 
+
+    $scope.setBwsUrl = function() {
+      // if(!$scope.formData.seedSource.supportsBCC) return;
+      var defaults = configService.getDefaults();
+      if(!('bwsbcc' in defaults)) return;
+
+      if ($scope.formData.BCCEnabled) {
+        $scope.formData.bwsurl = defaults.bwsbcc.url;
+
+      } else {
+        $scope.formData.bwsurl = defaults.bws.url;
+      }
+
+
+    };
+
+
     $scope.getFile = function() {
       // If we use onloadend, we need to check the readyState.
       reader.onloadend = function(evt) {
         if (evt.target.readyState == FileReader.DONE) { // DONE == 2
           var opts = {};
           opts.bwsurl = $scope.formData.bwsurl;
+          opts.overwriteBwsurl = $scope.formData.overwriteBwsurl;
+
+
           _importBlob(evt.target.result, opts);
         }
       }
@@ -218,6 +239,7 @@ angular.module('copayApp.controllers').controller('importController',
       } else {
         var opts = {};
         opts.bwsurl = $scope.formData.bwsurl;
+        opts.overwriteBwsurl = $scope.formData.overwriteBwsurl;
         _importBlob(backupText, opts);
       }
     };
