@@ -48,12 +48,18 @@ angular.module('copayApp.services').factory('feeService', function($log, $stateP
 
     walletClient.getFeeLevels('livenet', function(errLivenet, levelsLivenet) {
       walletClient.getFeeLevels('testnet', function(errTestnet, levelsTestnet) {
-        if (errLivenet || errTestnet) {
-          return cb(gettextCatalog.getString('Could not get dynamic fee'));
-        }
-        return cb(null, {
-          'livenet': levelsLivenet,
-          'testnet': levelsTestnet
+        walletClient.getFeeLevels('livenet', function(errBccLivenet, levelsBccTestnet) {
+          walletClient.getFeeLevels('bcctestnet', function(errBccTestnet, levelsBccTestnet) {
+            if (errLivenet || errTestnet || errBccLivenet || errBccTestnet ) {
+              return cb(gettextCatalog.getString('Could not get dynamic fee'));
+            }
+            return cb(null, {
+              'livenet': levelsLivenet,
+              'testnet': levelsTestnet,
+              'bcclivenet': levelsBccLivenet,
+              'bcctestnet': levelsBccTestnet
+            });
+          });
         });
       });
     });
